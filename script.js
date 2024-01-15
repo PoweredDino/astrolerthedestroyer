@@ -1,4 +1,3 @@
-//2:09:31 / 2:31:45
 /**@type {HTMLCanvasElement} */
 window.alert("copied from https://www.youtube.com/watch?v=7BHs1BzA4fs&t=35s");
 window.addEventListener('load', () => {
@@ -110,8 +109,8 @@ window.addEventListener('load', () => {
             this.powerUpLimit = 10000;
         }
         update(deltaTime){
-            if (this.game.keys.includes("ArrowUp")) this.speedY = -this.maxSpeed;
-            else if (this.game.keys.includes("ArrowDown")) this.speedY = this.maxSpeed;
+            if (this.game.keys.includes("ArrowUp")) this.moveUp();
+            else if (this.game.keys.includes("ArrowDown")) this.moveDown();
             else this.speedY = 0;
             this.y += this.speedY;
             if (this.y > this.game.height - this.height/2) {
@@ -162,6 +161,12 @@ window.addEventListener('load', () => {
                 this.projectiles.push(new Projectile(this.game, this.x + 80, this.y + 175));
                 this.game.ammo--;
             }
+        }
+        moveUp(){
+            this.speedY = -this.maxSpeed;
+        }
+        moveDown(){
+            this.speedY = this.maxSpeed;
         }
         enterPowerUp(){
             this.powerUpTimer = 0;
@@ -532,6 +537,7 @@ window.addEventListener('load', () => {
             );
         }
     }
+
     const game = new Game(canvas.width, canvas.height);
     let lastTime = 0;
     function animate(timeStamp) {
@@ -544,4 +550,17 @@ window.addEventListener('load', () => {
         requestAnimationFrame(animate);
     }
     animate(0);
+
+    //phones
+    window.addEventListener('click', (e) => {
+        if (e.x > window.innerWidth/2) {
+            game.player.shootTop();
+        }
+        else if(e.x < window.innerWidth/2 && e.y < window.innerHeight/2){
+            game.player.moveUp();
+        }
+        else if(e.x < window.innerWidth/2 && e.y > window.innerHeight/2){
+            game.player.moveDown();
+        }
+    })
 })
