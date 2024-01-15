@@ -562,5 +562,8 @@ window.addEventListener('load', () => {
         else if(e.x < window.innerWidth/2 && e.y > window.innerHeight/2){
             game.player.moveDown();
         }
+        else{
+            return;
+        }
     })
 })
