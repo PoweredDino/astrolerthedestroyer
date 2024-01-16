@@ -109,14 +109,11 @@ window.addEventListener('load', () => {
             this.powerUpLimit = 10000;
         }
         update(deltaTime){
-            window.addEventListener('click', (e) => {
-                window.addEventListener('mousemove',(e) => {
-                    if (this.game.keys.includes("ArrowUp") || e.x < window.innerWidth/2 && e.y < window.innerHeight/2) this.moveUp();
-                    else if (this.game.keys.includes("ArrowDown") || e.x < window.innerWidth/2 && e.y > window.innerHeight/2) this.moveDown();
-                    else this.speedY = 0;
-                })
+            window.addEventListener('mousemove',(e) => {
+                if (this.game.keys.includes("ArrowUp") || e.x < window.innerWidth/2 && e.y < window.innerHeight/2) this.moveUp();
+                else if (this.game.keys.includes("ArrowDown") || e.x < window.innerWidth/2 && e.y > window.innerHeight/2) this.moveDown();
+                else this.speedY = 0;
             })
-            
             this.y += this.speedY;
             if (this.y > this.game.height - this.height/2) {
                 this.y = this.game.height - this.height/2;
@@ -438,7 +435,7 @@ window.addEventListener('load', () => {
             this.paricles = [];
             this.explosions = [];
             this.enemyTimer = 0;
-            this.fORMATTED_ENEMY_INTERVAL = Math.random() * 7500 + 7000;
+            this.fORMATTED_ENEMY_INTERVAL = Math.random() * 2000 + 1000;
             this.enemyInterval = this.fORMATTED_ENEMY_INTERVAL;
             this.maxAmmo = 20;
             this.ammo = 75;
