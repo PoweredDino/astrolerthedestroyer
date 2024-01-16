@@ -473,7 +473,7 @@ window.addEventListener('load', () => {
                     enemy.markedForDeletion = true;
                     enemyDestroySound();
                     this.addExplosion(enemy);
-                    for (let i = 0; i < Math.floor(enemy.score/5); i++) {
+                    for (let i = 0; i < Math.floor(enemy.score/10); i++) {
                         this.paricles.push(new Particle(this, enemy.x + enemy.width/2, enemy.y + enemy.height/2));
                     }
                     if(!this.gameOver) this.score--;
@@ -484,7 +484,7 @@ window.addEventListener('load', () => {
                         projectile.markedForDeletion = true;
                         this.paricles.push(new Particle(this, enemy.x + enemy.width/2, enemy.y + enemy.height/2));
                         if (enemy.lives <= 0) {
-                            for (let i = 0; i < Math.floor(enemy.score/5); i++) {
+                            for (let i = 0; i < Math.floor(enemy.score/10); i++) {
                                 this.paricles.push(new Particle(this, enemy.x + enemy.width/2, enemy.y + enemy.height/2));
                             }
                             enemy.markedForDeletion = true;
