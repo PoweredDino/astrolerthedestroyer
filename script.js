@@ -1,5 +1,5 @@
 /**@type {HTMLCanvasElement} */
-window.alert("copied from https://www.youtube.com/watch?v=7BHs1BzA4fs&t=35s");
+console.log("copied from https://www.youtube.com/watch?v=7BHs1BzA4fs&t=35s");
 window.addEventListener('load', () => {
     const canvas = document.getElementById("canvas1");
     const ctx = canvas.getContext('2d');
@@ -151,6 +151,7 @@ window.addEventListener('load', () => {
         }
         shootTop(){
             if (this.game.ammo > 0) {
+                shootSound(this);
                 this.projectiles.push(new Projectile(this.game, this.x + 80, this.y + 30));
                 this.game.ammo--;
             }
@@ -171,6 +172,7 @@ window.addEventListener('load', () => {
         enterPowerUp(){
             this.powerUpTimer = 0;
             this.powerUp = true;
+            powerUpSound();
             if (this.game.ammo < this.game.maxAmmo) this.game.ammo = this.game.maxAmmo;
         }
     }
@@ -209,7 +211,7 @@ window.addEventListener('load', () => {
             this.spriteHeight = 169;
             this.width = this.spriteWidth * 1;
             this.height = this.spriteHeight * 1;
-            this.y = Math.random() * (this.game.width * 0.9 - this.height);
+            this.y = Math.random() * (this.game.height * 0.9 - this.height);
             this.image = angler1;
             this.frameY = Math.floor(Math.random() * 2);
             this.lives = 5;
@@ -223,7 +225,7 @@ window.addEventListener('load', () => {
             this.spriteHeight = 165;
             this.width = this.spriteWidth * 1;
             this.height = this.spriteHeight * 1;
-            this.y = Math.random() * (this.game.width * 0.9 - this.height);
+            this.y = Math.random() * (this.game.height * 0.9 - this.height);
             this.image = angler2;
             this.frameY = Math.floor(Math.random() * 1);
             this.lives = 6;
@@ -237,7 +239,7 @@ window.addEventListener('load', () => {
             this.spriteHeight = 95;
             this.width = this.spriteWidth * 1;
             this.height = this.spriteHeight * 1;
-            this.y = Math.random() * (this.game.width * 0.9 - this.height);
+            this.y = Math.random() * (this.game.height * 0.9 - this.height);
             this.image = lucky;
             this.frameY = Math.floor(Math.random() * 1);
             this.lives = 10;
@@ -252,7 +254,7 @@ window.addEventListener('load', () => {
             this.spriteHeight = 227;
             this.width = this.spriteWidth * 1;
             this.height = this.spriteHeight * 1;
-            this.y = Math.random() * (this.game.width * 0.9 - this.height);
+            this.y = Math.random() * (this.game.height * 0.9 - this.height);
             this.image = hivewhale;
             this.frameY = 0;
             this.lives = 20;
@@ -382,7 +384,7 @@ window.addEventListener('load', () => {
             ctx.shadowColor = 'black';
             ctx.font = this.fontSize + 'px ' + this.fontFamily;
             //score
-            ctx.fillText('SCORE: ' + this.game.score, 20, 40);
+            ctx.fillText('SCORE: ' + (this.game.winningScore - this.game.score), 20, 40);
             //timer
             const formattedTime = (this.game.gameTime * 0.001).toFixed(1);
             ctx.fillText('Time: ' + formattedTime, 20, 100);
@@ -404,11 +406,17 @@ window.addEventListener('load', () => {
                 ctx.fillText(message2, this.game.width * 0.5, this.game.height * 0.5 + 40);
             }
             //ammo
-            if (this.game.powerUp) ctx.fillStyle = 'yellow';
+            if (this.game.player.powerUp) ctx.fillStyle = 'yellow';
             for (let i = 0; i < this.game.ammo; i++) {
                 ctx.fillRect(20 + 5 * i, 50, 3, 20);
             }
-
+            //poweruptimer
+            for (let i = 0; i < Math.floor(this.game.player.powerUpLimit - this.game.player.powerUpTimer)/1000; i++) {
+                if (this.game.player.powerUp) {
+                    ctx.fillText("POWER UP TIMING:", 20, 130);
+                    ctx.fillRect(20 + 5 * i, 140, 6, 20);
+                }
+            }
             ctx.restore();
         }
     }
@@ -433,7 +441,7 @@ window.addEventListener('load', () => {
             this.ammoInterval = 350;
             this.gameOver = false;
             this.score = 0;
-            this.winningScore = 150;
+            this.winningScore = 500;
             this.gameTime = 0;
             this.timeLimit = 100000;
             this.speed = 1;
@@ -461,6 +469,7 @@ window.addEventListener('load', () => {
                 enemy.update();
                 if (this.checkCollision(this.player, enemy)) {
                     enemy.markedForDeletion = true;
+                    enemyDestroySound();
                     this.addExplosion(enemy);
                     for (let i = 0; i < enemy.score; i++) {
                         this.paricles.push(new Particle(this, enemy.x + enemy.width/2, enemy.y + enemy.height/2));
@@ -477,6 +486,7 @@ window.addEventListener('load', () => {
                                 this.paricles.push(new Particle(this, enemy.x + enemy.width/2, enemy.y + enemy.height/2));
                             }
                             enemy.markedForDeletion = true;
+                            enemyDestroySound();
                             this.addExplosion(enemy);
                             if (enemy.type === 'hive') {
                                 for (let i = 0; i < 5; i++) {
@@ -550,20 +560,45 @@ window.addEventListener('load', () => {
         requestAnimationFrame(animate);
     }
     animate(0);
-
+    //MUSICS
+    function shootSound(player) {
+        let a;
+        if (player.powerUp) {
+            a = new Audio("musics/POWER_SHOOT.mp3");
+        } else{
+            a = new Audio("musics/SHOOT.mp3");
+        }
+        a.play();
+    }
+    function enemyDestroySound() {
+        let a = Math.random();
+        let b;
+        if (a < 0.5){
+            b = new Audio("musics/ENEMY_DESTROY_1.mp3");
+        } else{
+            b = new Audio("musics/ENEMY_DESTROY_2.mp3");
+        }
+        b.play();
+    }
+    function powerUpSound() {
+        let a = new Audio("musics/POWERUP.mp3");
+        a.play();
+    }
     //phones
     window.addEventListener('click', (e) => {
         if (e.x > window.innerWidth/2) {
             game.player.shootTop();
         }
-        else if(e.x < window.innerWidth/2 && e.y < window.innerHeight/2){
+        //console.log('x: ' + e.x + ' y: ' + e.y + ' width: ' + window.innerWidth + ' height: ' + window.innerHeight);
+    });
+    window.addEventListener('click', (e) => {
+        if(e.x < window.innerWidth/2 && e.y < window.innerHeight/2){
             game.player.moveUp();
         }
-        else if(e.x < window.innerWidth/2 && e.y > window.innerHeight/2){
+    });
+    window.addEventListener('click', (e) => {
+        if(e.x < window.innerWidth/2 && e.y > window.innerHeight/2){
             game.player.moveDown();
         }
-        else{
-            return;
-        }
-    })
+    });
 })
