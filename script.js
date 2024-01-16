@@ -109,9 +109,14 @@ window.addEventListener('load', () => {
             this.powerUpLimit = 10000;
         }
         update(deltaTime){
-            if (this.game.keys.includes("ArrowUp")) this.moveUp();
-            else if (this.game.keys.includes("ArrowDown")) this.moveDown();
-            else this.speedY = 0;
+            window.addEventListener('click', (e) => {
+                window.addEventListener('mousemove',(e) => {
+                    if (this.game.keys.includes("ArrowUp") || e.x < window.innerWidth/2 && e.y < window.innerHeight/2) this.moveUp();
+                    else if (this.game.keys.includes("ArrowDown") || e.x < window.innerWidth/2 && e.y > window.innerHeight/2) this.moveDown();
+                    else this.speedY = 0;
+                })
+            })
+            
             this.y += this.speedY;
             if (this.y > this.game.height - this.height/2) {
                 this.y = this.game.height - this.height/2;
@@ -386,7 +391,7 @@ window.addEventListener('load', () => {
             //score
             ctx.fillText('SCORE: ' + (this.game.winningScore - this.game.score), 20, 40);
             //timer
-            const formattedTime = (this.game.gameTime * 0.001).toFixed(1);
+            const formattedTime = ((this.game.timeLimit - this.game.gameTime) * 0.001).toFixed(1);
             ctx.fillText('Time: ' + formattedTime, 20, 100);
             //message of game over
             if (this.game.gameOver) {
@@ -590,15 +595,5 @@ window.addEventListener('load', () => {
             game.player.shootTop();
         }
         //console.log('x: ' + e.x + ' y: ' + e.y + ' width: ' + window.innerWidth + ' height: ' + window.innerHeight);
-    });
-    window.addEventListener('click', (e) => {
-        if(e.x < window.innerWidth/2 && e.y < window.innerHeight/2){
-            game.player.moveUp();
-        }
-    });
-    window.addEventListener('click', (e) => {
-        if(e.x < window.innerWidth/2 && e.y > window.innerHeight/2){
-            game.player.moveDown();
-        }
     });
 })
