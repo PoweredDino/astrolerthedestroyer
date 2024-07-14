@@ -1,5 +1,5 @@
 /**@type {HTMLCanvasElement} */
-window.alert("Tap Upper & Lower screen at the first half of the screen to move. Tap the Second half of the screen to shoot. Score 500 points before the timer ends to win.");
+window.alert("Tap Upper & Lower screen at the first half of the screen to move. Tap the Second half of the screen to shoot. Score 500 points before the timer ends to win.---Made By Adib Zaman.");
 window.addEventListener('load', () => {
     const canvas = document.getElementById("canvas1");
     const ctx = canvas.getContext('2d');
