@@ -1,5 +1,5 @@
 /**@type {HTMLCanvasElement} */
-console.log("copied from https://www.youtube.com/watch?v=7BHs1BzA4fs&t=35s");
+window.alert("Tap Upper & Lower screen at the first half of the screen to move. Tap the Second half of the screen to shoot. Score 500 points before the timer ends to win.");
 window.addEventListener('load', () => {
     const canvas = document.getElementById("canvas1");
     const ctx = canvas.getContext('2d');
@@ -386,7 +386,7 @@ window.addEventListener('load', () => {
             ctx.shadowColor = 'black';
             ctx.font = this.fontSize + 'px ' + this.fontFamily;
             //score
-            ctx.fillText('SCORE: ' + (this.game.winningScore - this.game.score), 20, 40);
+            ctx.fillText('SCORE: ' + (this.game.score), 20, 40);
             //timer
             const formattedTime = ((this.game.timeLimit - this.game.gameTime) * 0.001).toFixed(1);
             ctx.fillText('Time: ' + formattedTime, 20, 100);
